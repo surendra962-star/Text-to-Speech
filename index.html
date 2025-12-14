@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Text to Speech</title>
+  <link rel="stylesheet" href="text-to-voice.css">
+
+  <!-- ResponsiveVoice CDN -->
+  <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+</head>
+<body>
+
+  <!-- Bubble Background -->
+  <div class="bubble-area"></div>
+
+  <!-- Main Container -->
+  <div class="tts-container" id="tts">
+    <h2>Text to Speech</h2>
+
+    <textarea
+      id="textInput"
+      placeholder="Enter text and click Speak..."
+    ></textarea>
+
+    <div class="controls">
+      <label>
+        Speed:
+        <span id="speedValue">1x</span>
+      </label>
+      <input
+        type="range"
+        id="speed"
+        min="0.5"
+        max="2"
+        step="0.1"
+        value="1"
+      >
+    </div>
+
+    <div class="buttons">
+      <button onclick="speakText()">Speak</button>
+      <button onclick="stopSpeech()">Stop</button>
+    </div>
+
+    <p id="status"></p>
+  </div>
+
+  <!-- Bubble Counter -->
+  <div class="bubble-count">
+    Bubbles popped: <span id="count">0</span>
+  </div>
+
+  <script src="text-to-voice.js"></script>
+</body>
+</html>
