@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <title>Text to Speech</title>
   <link rel="stylesheet" href="text-to-voice.css">
-
-  <!-- ResponsiveVoice CDN -->
-  <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
 </head>
 <body>
 
@@ -17,29 +14,32 @@
   <div class="tts-container" id="tts">
     <h2>Text to Speech</h2>
 
-    <textarea
-      id="textInput"
-      placeholder="Enter text and click Speak..."
-    ></textarea>
+    <textarea id="textInput" placeholder="Enter text and click Speak..."></textarea>
 
+    <!-- Language Selection -->
     <div class="controls">
-      <label>
-        Speed:
-        <span id="speedValue">1x</span>
-      </label>
-      <input
-        type="range"
-        id="speed"
-        min="0.5"
-        max="2"
-        step="0.1"
-        value="1"
-      >
+      <label>Language</label>
+      <select id="language">
+        <option value="en-US">English (US)</option>
+        <option value="en-IN">English (India)</option>
+        <option value="hi-IN">Hindi</option>
+        <option value="te-IN">Telugu</option>
+        <option value="ta-IN">Tamil</option>
+      </select>
     </div>
 
+    <!-- Speed Control -->
+    <div class="controls">
+      <label>Speed: <span id="speedValue">1x</span></label>
+      <input type="range" id="speed" min="0.5" max="2" step="0.1" value="1">
+    </div>
+
+    <!-- Buttons -->
     <div class="buttons">
-      <button onclick="speakText()">Speak</button>
-      <button onclick="stopSpeech()">Stop</button>
+      <button onclick="speakText()">▶ Speak</button>
+      <button onclick="pauseSpeech()">⏸ Pause</button>
+      <button onclick="resumeSpeech()">⏯ Resume</button>
+      <button onclick="stopSpeech()">⏹ Stop</button>
     </div>
 
     <p id="status"></p>
