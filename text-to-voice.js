@@ -2,17 +2,19 @@ const textInput = document.getElementById("textInput");
 const speedControl = document.getElementById("speed");
 const speedValue = document.getElementById("speedValue");
 const status = document.getElementById("status");
-const container = document.getElementById("tts");
+const languageSelect = document.getElementById("language");
 const countEl = document.getElementById("count");
 
+let synth = window.speechSynthesis;
+let utterance;
 let bubbleCount = 0;
 
-/* ================= SPEED ================= */
+/* Speed display */
 speedControl.oninput = () => {
   speedValue.innerText = speedControl.value + "x";
 };
 
-/* ================= TEXT TO SPEECH ================= */
+/* Speak */
 function speakText() {
   const text = textInput.value.trim();
   if (!text) {
@@ -20,64 +22,60 @@ function speakText() {
     return;
   }
 
-  responsiveVoice.speak(
-    text,
-    "US English Female",
-    { rate: parseFloat(speedControl.value) }
-  );
+  synth.cancel();
 
+  utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = languageSelect.value;
+  utterance.rate = parseFloat(speedControl.value);
+
+  /* ✅ Auto stop after completion */
+  utterance.onend = () => {
+    status.innerText = "Completed";
+    synth.cancel();
+  };
+
+  synth.speak(utterance);
   status.innerText = "Speaking...";
 }
 
+/* Pause */
+function pauseSpeech() {
+  if (synth.speaking) {
+    synth.pause();
+    status.innerText = "Paused";
+  }
+}
+
+/* Resume */
+function resumeSpeech() {
+  if (synth.paused) {
+    synth.resume();
+    status.innerText = "Resumed";
+  }
+}
+
+/* Stop */
 function stopSpeech() {
-  responsiveVoice.cancel();
+  synth.cancel();
   status.innerText = "Stopped";
 }
 
-/* ================= CURSOR MOVE CONTAINER ================= */
-document.addEventListener("mousemove", (e) => {
-  const x = (window.innerWidth / 2 - e.clientX) / 25;
-  const y = (window.innerHeight / 2 - e.clientY) / 25;
-
-  container.style.transform =
-    `rotateY(${x}deg) rotateX(${y}deg) translateY(-10px)`;
-});
-
-/* ================= BUBBLES ================= */
+/* Bubble animation */
 const bubbleArea = document.querySelector(".bubble-area");
 
-function createBubble() {
+setInterval(() => {
   const bubble = document.createElement("div");
   bubble.className = "bubble";
-
-  const size = Math.random() * 40 + 20;
-  bubble.style.width = size + "px";
-  bubble.style.height = size + "px";
-
+  bubble.style.width = bubble.style.height = Math.random() * 40 + 20 + "px";
   bubble.style.left = Math.random() * 100 + "%";
-  bubble.style.top = Math.random() * 100 + "%";
+  bubble.style.bottom = "-50px";
 
-  const moveX = (Math.random() * 400 - 200) + "px";
-  const moveY = (Math.random() * -500 - 200) + "px";
-
-  bubble.style.setProperty("--x", moveX);
-  bubble.style.setProperty("--y", moveY);
-  bubble.style.animationDuration = Math.random() * 6 + 6 + "s";
-
-  bubble.addEventListener("click", () => {
-    bubble.classList.add("glow");
-
-    setTimeout(() => {
-      bubble.classList.add("pop");
-      bubbleCount++;
-      countEl.innerText = bubbleCount;
-    }, 150);
-
-    setTimeout(() => bubble.remove(), 350);
-  });
+  bubble.onclick = () => {
+    bubble.remove();
+    bubbleCount++;
+    countEl.innerText = bubbleCount;
+  };
 
   bubbleArea.appendChild(bubble);
-  setTimeout(() => bubble.remove(), 12000);
-}
-
-setInterval(createBubble, 900);
+  setTimeout(() => bubble.remove(), 10000);
+}, 900);
